@@ -60,8 +60,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      opacity: 1;
-      transition: opacity 0.5s ease-in-out;
     }
 
     .logo {
@@ -83,10 +81,6 @@
         transform: translateY(0);
       }
     }
-
-    .fade-out {
-      opacity: 0;
-    }
   </style>
 </head>
 <body>
@@ -96,65 +90,54 @@
   
   <script src="flutter_bootstrap.js" async></script>
   <script>
-    // Flag to track if the Flutter app is ready
-    let flutterReady = false;
-    let minDisplayTime = 2000; // Minimum time to show splash (2 seconds)
-    let splashTimeout = 8050; // Maximum time to show splash (8 seconds)
-    let startTime = Date.now();
+    // Flag to check if we've already hidden the splash screen
+    let splashRemoved = false;
+    let maxWaitTime = 8000; // Maximum time to wait before removing splash (8 seconds)
     
-    // Create a function to fade out and remove the splash screen
-    function hideSplash() {
+    // Function to remove the splash screen immediately
+    function removeSplash() {
+      if (splashRemoved) return;
+      
       const container = document.getElementById('splash-container');
       if (container) {
-        container.classList.add('fade-out');
-        setTimeout(() => {
-          container.remove();
-        }, 500); // Wait for fade animation to complete
+        container.remove();
+        splashRemoved = true;
       }
     }
     
-    // Function to check if we can hide the splash screen
-    function checkHideSplash() {
-      const elapsedTime = Date.now() - startTime;
-      
-      // Only hide if:
-      // 1. Flutter is ready AND minimum display time has passed, OR
-      // 2. Maximum timeout has been reached
-      if ((flutterReady && elapsedTime >= minDisplayTime) || elapsedTime >= splashTimeout) {
-        hideSplash();
-        return true;
-      }
-      return false;
-    }
-    
-    // Listen for Flutter initialization
+    // Listen for Flutter initialization - this is the key event
     window.addEventListener('flutter-first-frame', function() {
-      flutterReady = true;
-      checkHideSplash();
+      // Remove splash immediately when Flutter renders its first frame
+      removeSplash();
     });
     
-    // Fallback for older Flutter versions that might not trigger the event
-    window.addEventListener('load', function() {
-      // Check periodically if Flutter has rendered content
-      const checkInterval = setInterval(function() {
-        // Look for Flutter rendering canvas or typical Flutter elements
-        const flutterCanvas = document.querySelector('flt-glass-pane');
-        
-        if (flutterCanvas) {
-          flutterReady = true;
-          if (checkHideSplash()) {
-            clearInterval(checkInterval);
-          }
-        }
-      }, 100);
+    // Fallback: monitor for Flutter rendering
+    function checkForFlutterContent() {
+      // If already removed, stop checking
+      if (splashRemoved) return;
       
-      // Safety timeout - hide splash after max time regardless
-      setTimeout(function() {
-        if (checkHideSplash()) {
-          clearInterval(checkInterval);
-        }
-      }, splashTimeout);
-    });
+      // Check for Flutter canvas element
+      const flutterCanvas = document.querySelector('flt-glass-pane');
+      if (flutterCanvas && flutterCanvas.childElementCount > 0) {
+        removeSplash();
+      }
+    }
+    
+    // Set up regular checks for Flutter content
+    const checkInterval = setInterval(function() {
+      checkForFlutterContent();
+      
+      // Stop checking if we've already removed the splash
+      if (splashRemoved) {
+        clearInterval(checkInterval);
+      }
+    }, 100);
+    
+    // Safety timeout - remove splash after max wait time regardless
+    setTimeout(function() {
+      removeSplash();
+      clearInterval(checkInterval);
+    }, maxWaitTime);
   </script>
 </body>
 </html>
