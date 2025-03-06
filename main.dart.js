@@ -44670,7 +44670,7 @@ o.push(new A.c_(0,B.a7,A.U(102,g.gk(0)>>>16&255,g.gk(0)>>>8&255,g.gk(0)&255),B.i
 f=A.U(B.c.ab(25.5),B.f.gk(0)>>>16&255,B.f.gk(0)>>>8&255,B.f.gk(0)&255)
 e=a0.a.c
 e=A.b([A.be(c,A.a3x(g,A.be(c,A.fO(A.nb("assets/images/"+e.b+".png",new A.aqU(a0),B.d5,60,60),c,c),B.m,f,c,c,c,70,c,c,c,c,70)),B.m,c,c,new A.bg(c,c,c,c,o,c,c,B.bk),c,c,c,c,c,c,c),B.eU,A.bB(e.a,c,c,c,c,c,A.bT(c,c,B.f,c,c,c,c,c,c,c,c,18,c,c,B.bW,c,c,!0,c,0.5,c,c,c,c,c,c),B.bt,c)],k)
-if(i)e.push(new A.bF(B.EX,A.bB("Tap to connect",c,c,c,c,c,A.bT(c,c,A.U(153,B.f.gk(0)>>>16&255,B.f.gk(0)>>>8&255,B.f.gk(0)&255),c,c,c,c,c,c,c,c,12,c,c,c,c,c,!0,c,c,c,c,c,c,c,c),c,c),c))
+if(i)e.push(new A.bF(B.EX,A.bB("",c,c,c,c,c,A.bT(c,c,A.U(153,B.f.gk(0)>>>16&255,B.f.gk(0)>>>8&255,B.f.gk(0)&255),c,c,c,c,c,c,c,c,3,c,c,c,c,c,!0,c,c,c,c,c,c,c,c),c,c),c))
 o=A.b([A.cF(e,B.A,B.dp,B.D)],k)
 if(a0.r&&!i){k=a0.f
 k===$&&A.a()
