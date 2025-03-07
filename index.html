@@ -14,6 +14,7 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
+  <base href="/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -47,20 +48,24 @@
   <title>coin_node</title>
   <link rel="manifest" href="manifest.json">
 
-
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      background-color: #010102; /* Set your preferred single background color here */
+      background-color: #010102;
     }
 
-    .container {
+    #splash-container {
       width: 100vw;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background-color: #010102;
     }
 
     .logo {
@@ -76,7 +81,7 @@
         transform: translateY(0);
       }
       50% {
-        transform: translateY(-30px); /* Adjust the bounce height */
+        transform: translateY(-30px);
       }
       100% {
         transform: translateY(0);
@@ -91,11 +96,9 @@
   
   <script src="flutter_bootstrap.js" async></script>
   <script>
-    // Flag to check if we've already hidden the splash screen
     let splashRemoved = false;
-    let maxWaitTime = 8000; // Maximum time to wait before removing splash (8 seconds)
     
-    // Function to remove the splash screen immediately
+    // Function to remove the splash screen
     function removeSplash() {
       if (splashRemoved) return;
       
@@ -106,39 +109,35 @@
       }
     }
     
-    // Listen for Flutter initialization - this is the key event
+    // Primary method: Listen for Flutter's first frame event
     window.addEventListener('flutter-first-frame', function() {
-      // Remove splash immediately when Flutter renders its first frame
       removeSplash();
     });
     
-    // Fallback: monitor for Flutter rendering
+    // Backup method: Check for Flutter content being visible
     function checkForFlutterContent() {
-      // If already removed, stop checking
       if (splashRemoved) return;
       
-      // Check for Flutter canvas element
-      const flutterCanvas = document.querySelector('flt-glass-pane');
-      if (flutterCanvas && flutterCanvas.childElementCount > 0) {
+      const flutterPane = document.querySelector('flt-glass-pane');
+      if (flutterPane && flutterPane.childElementCount > 0) {
         removeSplash();
       }
     }
     
-    // Set up regular checks for Flutter content
+    // Check every 100ms
     const checkInterval = setInterval(function() {
       checkForFlutterContent();
       
-      // Stop checking if we've already removed the splash
       if (splashRemoved) {
         clearInterval(checkInterval);
       }
     }, 100);
     
-    // Safety timeout - remove splash after max wait time regardless
+    // Safety timeout: remove after 8 seconds no matter what
     setTimeout(function() {
       removeSplash();
       clearInterval(checkInterval);
-    }, maxWaitTime);
+    }, 8000);
   </script>
 </body>
 </html>
